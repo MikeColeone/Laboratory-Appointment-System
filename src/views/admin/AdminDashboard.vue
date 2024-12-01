@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { ElButton } from 'element-plus'
+import { Delete } from '@element-plus/icons-vue'
 
 //初始dialog不可视
 const isVisible = ref(false)
-const tableData = ref([])
 //删除
 const handleDelete = (row) => {}
 //编辑
@@ -12,6 +12,19 @@ const handleEdit = (index) => {}
 const visible = (isVisible: { value: boolean }) => {
   isVisible.value = !isVisible.value
 }
+const tableData = ref([
+  {
+    index: 1,
+    username: 'admin1',
+    name: '张三',
+    phone: '123456789',
+    email: 'zhangsan@example.com',
+    role: '管理员',
+  },
+  // 添加更多示例数据
+])
+
+const save = () => {}
 const form = ref()
 const data = ref({
   form: { username: '', password: '' },
@@ -23,34 +36,40 @@ const data = ref({
 })
 </script>
 <template>
-  <div>
+  <div class="containner" style="display: flex; flex-direction: column">
     <!-- 搜索栏 -->
-    <div class="searchBox">
-      <el-input aria-placeholder="请输入账号查询"></el-input>
-      <el-button>查询</el-button>
-      <el-button>重置</el-button>
+    <div class="searchBox" style="display: flex">
+      <el-input aria-placeholder="请输入账号查询" style="width: 200px"></el-input>
+      <el-button style="margin: 10px">查询</el-button>
+      <el-button style="margin: 10px">重置</el-button>
     </div>
 
+    <hr />
     <!-- 功能框 添加 删除 -->
     <div class="item">
       <el-button>新增</el-button>
       <el-button>删除</el-button>
     </div>
 
-    <div class="table">
+    <div class="table" style="color: blueviolet">
       <el-table :data="tableData">
-        <el-table-column prop="index" lable="序号"></el-table-column>
-        <el-table-column prop="username" lable="账号"></el-table-column>
-        <el-table-column prop="name" lable="姓名"></el-table-column>
-        <el-table-column prop="phone" lable="电话"></el-table-column>
-        <el-table-column prop="email" lable="邮箱"></el-table-column>
-        <el-table-column prop="role" lable="身份"></el-table-column>
-        <el-table-column label="操作" align="center" width="180">
+        <el-table-column prop="index" label="序号"></el-table-column>
+        <el-table-column prop="username" label="账号"></el-table-column>
+        <el-table-column prop="name" label="姓名"></el-table-column>
+        <el-table-column prop="phone" label="电话"></el-table-column>
+        <el-table-column prop="email" label="邮箱"></el-table-column>
+        <el-table-column prop="role" label="身份"></el-table-column>
+        <el-table-column label="操作" width="180">
           <template v-slot="scope">
             <el-button size="small" type="primary" plain @click="handleEdit(scope.row)"
               >编辑</el-button
             >
-            <el-button size="small" type="danger" plain @click="handleDelete(scope.row.id)"
+            <el-button
+              size="small"
+              type="danger"
+              :icon="Delete"
+              circle
+              @click="handleDelete(scope.row.id)"
               >删除</el-button
             >
           </template>
@@ -87,3 +106,5 @@ const data = ref({
     </div>
   </div>
 </template>
+
+<style scoped></style>

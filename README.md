@@ -32,9 +32,13 @@ npm run build
 npm run lint
 ```
 
-
-
 # Update
+
+- 2024/12/2
+  
+  ```js
+  
+  ```
 
 - 2024/11/29
   

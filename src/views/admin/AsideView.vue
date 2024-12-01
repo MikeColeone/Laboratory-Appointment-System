@@ -45,12 +45,12 @@ const handleOpen = () => {
         <!-- 实现添加教师进来 -->
         <el-menu-item index="3-1">教师管理</el-menu-item>
         <el-menu-item index="3-2">管理员管理</el-menu-item>
-        <el-menu-item index="3-2">个人中心</el-menu-item>
+        <el-menu-item index="3-3">个人中心 </el-menu-item>
       </el-sub-menu>
     </el-menu>
   </div>
 </template>
-<style>
+<style scoped>
 * {
   margin: 0px;
   color: aliceblue;

@@ -8,8 +8,15 @@ import { Loading } from '@element-plus/icons-vue'
         <RouterView />
       </template>
       <template #fallback>
-        <LoadingVue />
+        <Loading />
       </template>
     </suspense>
   </div>
 </template>
+
+<style>
+* {
+  margin: 0px;
+  padding: 0px;
+}
+</style>

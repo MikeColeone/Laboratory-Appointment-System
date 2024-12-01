@@ -103,6 +103,7 @@ const login = () => {
 
           <el-form-item props="password">
             <el-input
+              type="password"
               v-model="data.form.password"
               placeholder="请输入密码"
               :prefix-icon="Lock"
