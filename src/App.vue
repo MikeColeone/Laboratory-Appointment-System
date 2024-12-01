@@ -1,6 +1,15 @@
 <script setup lang="ts">
-import LoginView from './views/Login/LoginView.vue'
+import { Loading } from '@element-plus/icons-vue'
 </script>
 <template>
-  <div><LoginView></LoginView></div>
+  <div>
+    <suspense>
+      <template #default>
+        <RouterView />
+      </template>
+      <template #fallback>
+        <LoadingVue />
+      </template>
+    </suspense>
+  </div>
 </template>
