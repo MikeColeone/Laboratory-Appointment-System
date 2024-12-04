@@ -2,6 +2,7 @@
 import AdminDashboard from './AdminDashboard.vue'
 import AsideView from './AsideView.vue'
 import MyselfView from './MyselfView.vue'
+import UploadView from '../teacher/UploadView.vue'
 </script>
 <template>
   <div class="common-layout">
@@ -10,7 +11,8 @@ import MyselfView from './MyselfView.vue'
       <el-container>
         <el-header>Header</el-header>
         <!-- <el-main><AdminDashboard></AdminDashboard></el-main> -->
-        <el-main><MyselfView></MyselfView></el-main>
+        <!-- <el-main><MyselfView></MyselfView></el-main> -->
+        <el-main><UploadView></UploadView></el-main>
       </el-container>
     </el-container>
   </div>
