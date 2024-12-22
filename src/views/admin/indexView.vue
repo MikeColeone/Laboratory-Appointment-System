@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import AdminDashboard from './AdminDashboard.vue'
-import AsideView from './AsideView.vue'
-import MyselfView from './MyselfView.vue'
-import UploadView from '../teacher/UploadView.vue'
+import AdminDashboard from './adminDashboard.vue'
+import AsideView from '../../components/asideView.vue'
+import MyselfView from './myselfView.vue'
+import UploadView from '../teacher/uploadView.vue'
+import AppointmentView from '../teacher/appointmentView.vue'
 </script>
 <template>
   <div class="common-layout">
@@ -13,6 +14,7 @@ import UploadView from '../teacher/UploadView.vue'
         <!-- <el-main><AdminDashboard></AdminDashboard></el-main> -->
         <!-- <el-main><MyselfView></MyselfView></el-main> -->
         <el-main><UploadView></UploadView></el-main>
+        <!-- <AppointmentView></AppointmentView> -->
       </el-container>
     </el-container>
   </div>

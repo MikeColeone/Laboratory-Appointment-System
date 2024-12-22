@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { Loading } from '@element-plus/icons-vue'
+import MainView from './views/MainView.vue'
 </script>
 <template>
   <div>
     <suspense>
       <template #default>
         <RouterView />
+        <!-- <MainView /> -->
       </template>
       <template #fallback>
         <Loading />
