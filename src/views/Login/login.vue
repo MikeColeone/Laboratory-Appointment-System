@@ -18,7 +18,7 @@ const formRef = ref()
 const login = () => {
   console.log(formRef.value)
 
-  router.push('/admin/dashboard')
+  router.push('/')
   // formRef.value?.validate((valid: boolean) => {
   //   if (valid) {
   //     alert('登陆成功')
