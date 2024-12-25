@@ -8,7 +8,6 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 const data = ref({
   form: { username: '', password: '' },
-  //表单验证规则
   rules: {
     username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
     password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
@@ -19,46 +18,44 @@ const login = () => {
   console.log(formRef.value)
 
   router.push('/')
-  // formRef.value?.validate((valid: boolean) => {
-  //   if (valid) {
-  //     alert('登陆成功')
-  //     router.push('/admin/dashboard')
-  //     console.log('===============================================')
-  //     request
-  //       .post('/login', data.value.form)
-  //       .then((res) => {
-  //         if (res.code === '200') {
-  //           const role = res.data.role // 获取角色信息
+  formRef.value?.validate((valid: boolean) => {
+    if (valid) {
+      alert('登陆成功')
+      request
+        .post('/login', data.value.form)
+        .then(
+          (res: { code: string; data: { role: unknown; username: unknown }; message: unknown }) => {
+            if (res.code === '200') {
+              const role = res.data.role
 
-  //           ElMessage.success(`欢迎，${res.data.username}！`)
-
-  //           // 根据角色进行跳转
-  //           switch (role) {
-  //             case 'admin':
-  //               location.href = '/admin/dashboard'
-  //               break
-  //             case 'teacher':
-  //               location.href = '/teacher/home'
-  //               break
-  //             case 'superAdmin':
-  //               location.href = '/super-admin/panel'
-  //               break
-  //             default:
-  //               ElMessage.error('角色未定义，无法跳转')
-  //               break
-  //           }
-  //         } else {
-  //           ElMessage.error(res.message || '登录失败')
-  //         }
-  //       })
-  //       .catch((error: unknown) => {
-  //         ElMessage.error('登录请求失败，请稍后重试')
-  //         console.error('登录错误:', error)
-  //       })
-  //   } else {
-  //     ElMessage.warning('请完整填写表单')
-  //   }
-  // })
+              ElMessage.success(`欢迎，${res.data.username}！`)
+              switch (role) {
+                case 'admin':
+                  location.href = '/admin/dashboard'
+                  break
+                case 'teacher':
+                  location.href = '/teacher/home'
+                  break
+                case 'superAdmin':
+                  location.href = '/super-admin/panel'
+                  break
+                default:
+                  ElMessage.error('角色未定义，无法跳转')
+                  break
+              }
+            } else {
+              ElMessage.error(res.message || '登录失败')
+            }
+          },
+        )
+        .catch((error: unknown) => {
+          ElMessage.error('登录请求失败，请稍后重试')
+          console.error('登录错误:', error)
+        })
+    } else {
+      ElMessage.warning('请完整填写表单')
+    }
+  })
 }
 </script>
 
