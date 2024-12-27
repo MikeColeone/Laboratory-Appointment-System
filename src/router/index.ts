@@ -1,14 +1,12 @@
 import { createRouter, createWebHashHistory, type RouteRecordRaw } from 'vue-router'
 
-import { ElMessage } from 'element-plus'
-
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
     component: () => import('@/views/MainView.vue'),
     children: [
       {
-        path: '/dashboard',
+        path: 'dashboard',
         component: () => import('@/dashboard/indexView.vue'),
         meta: {
           id: '1',
@@ -105,7 +103,7 @@ const routes: RouteRecordRaw[] = [
           {
             path: '/profile',
             name: 'Profile',
-            component: () => import('@/views/components/profiles.vue'),
+            component: () => import('@/views/components/personnalInfo.vue'),
             meta: {
               id: '3',
               name: '个人信息',

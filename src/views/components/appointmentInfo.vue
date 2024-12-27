@@ -1,175 +1,155 @@
-<script setup lang="ts">
-import { ref, onMounted } from 'vue'
-
-// 定义实验室对象的类型
-interface Lab {
-  id: number
-  name: string
-  descr: string
-  typeName: string
-  status: string
-  start: string
-  end: string
-}
-
-// 定义实验室类型对象
-interface LabType {
-  id: number
-  name: string
-}
-
-// 表单数据
-const name = ref<string | null>(null)
-const typeId = ref<number | null>(null)
-
-// 表格数据和分页信息
-const tableData = ref<Lab[]>([])
-const pageNum = ref(1)
-const pageSize = ref(10)
-const total = ref(0)
-
-// 实验室类型数据
-const typeData = ref<LabType[]>([
-  { id: 1, name: '物理实验室' },
-  { id: 2, name: '化学实验室' },
-  { id: 3, name: '计算机实验室' },
-])
-
-// 模拟实验室数据
-const allData: Lab[] = [
-  {
-    id: 1,
-    name: '实验室A',
-    descr: '高级物理实验室',
-    typeName: '物理实验室',
-    status: '空闲中',
-    start: '08:00',
-    end: '18:00',
-  },
-  {
-    id: 2,
-    name: '实验室B',
-    descr: '有机化学实验室',
-    typeName: '化学实验室',
-    status: '已占用',
-    start: '09:00',
-    end: '17:00',
-  },
-  {
-    id: 3,
-    name: '实验室C',
-    descr: '计算机网络实验室',
-    typeName: '计算机实验室',
-    status: '空闲中',
-    start: '10:00',
-    end: '20:00',
-  },
-  {
-    id: 4,
-    name: '实验室D',
-    descr: '基础物理实验室',
-    typeName: '物理实验室',
-    status: '空闲中',
-    start: '08:00',
-    end: '16:00',
-  },
-  // 添加更多数据...
-]
-
-// 加载实验室数据函数
-const load = async (page: number) => {
-  pageNum.value = page
-  // 模拟过滤数据
-  const filteredData = allData.filter((item) => {
-    return (
-      !typeId.value ||
-      item.typeName.includes(typeData.value.find((type) => type.id === typeId.value)?.name || '')
-    )
-  })
-
-  total.value = filteredData.length // 总数
-  tableData.value = filteredData.slice((page - 1) * pageSize.value, page * pageSize.value) // 分页显示
-}
-
-// 重置搜索条件
-const reset = () => {
-  name.value = null
-  typeId.value = null
-  load(1)
-}
-
-// 分页变化时加载
-const handleCurrentChange = (page: number) => {
-  load(page)
-}
-
-onMounted(() => {
-  load(1)
-})
-</script>
-
 <template>
   <div>
-    <h1>临时预约系统</h1>
     <div class="search">
-      <el-select v-model="typeId" placeholder="请选择实验室分类" style="width: 200px">
-        <el-option
-          v-for="item in typeData"
-          :label="item.name"
-          :value="item.id"
-          :key="item.id"
-        ></el-option>
+      <el-select v-model="status" placeholder="请选择审核状态" style="width: 200px">
+        <el-option label="待审核" value="待审核"></el-option>
+        <el-option label="审核通过" value="审核通过"></el-option>
+        <el-option label="审核不通过" value="审核不通过"></el-option>
       </el-select>
-      <el-button type="info" plain @click="load(1)">查询</el-button>
-      <el-button type="warning" plain @click="reset">重置</el-button>
+      <el-button type="info" plain style="margin-left: 10px" @click="load(1)">查询</el-button>
+      <el-button type="warning" plain style="margin-left: 10px" @click="reset">重置</el-button>
     </div>
+
     <div class="table">
-      <el-row :gutter="20">
-        <el-col :span="8" v-for="item in tableData" :key="item.id">
-          <div class="card" style="background-color: #ecf7fc; padding: 15px; border-radius: 8px">
-            <div style="color: #474849; font-size: 14px">
-              <strong>实验室编号：</strong>
-              <span style="font-size: 16px; font-weight: 550; color: #0376bf">{{ item.name }}</span>
-            </div>
-            <div style="margin-top: 10px; color: #474849">
-              <strong>名称：</strong>{{ item.descr }}
-            </div>
-            <div style="margin-top: 5px; color: #474849">
-              <strong>类型：</strong>{{ item.typeName }}
-            </div>
-            <div style="margin-top: 5px">
-              <strong>状态：</strong>
-              <span
-                :style="{
-                  fontWeight: '550',
-                  color: item.status === '空闲中' ? '#3c9e25' : '#ea8282',
-                }"
-              >
-                {{ item.status }}
-              </span>
-            </div>
-            <div style="margin-top: 10px; color: #474849">
-              <strong>开放时间：</strong>{{ item.start }} - {{ item.end }}
-            </div>
-            <div style="margin-top: 15px">
-              <el-button type="primary" size="mini">预约</el-button>
-            </div>
-          </div>
-        </el-col>
-      </el-row>
-      <div class="pagination" style="margin-top: 20px; text-align: center">
+      <el-table :data="tableData" stripe>
+        <!-- 表格列定义保持不变 -->
+        <el-table-column prop="id" label="序号" width="80" sortable></el-table-column>
+        <el-table-column prop="labName" label="实验室" show-overflow-tooltip></el-table-column>
+        <el-table-column
+          prop="labadminName"
+          label="实验室管理员"
+          show-overflow-tooltip
+        ></el-table-column>
+        <el-table-column prop="studentName" label="预约人" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="time" label="操作时间"></el-table-column>
+        <el-table-column prop="start" label="使用时间段">
+          <template #default="{ row }">{{ row.start }} ~ {{ row.end }}</template>
+        </el-table-column>
+        <el-table-column prop="status" label="预约状态"></el-table-column>
+        <el-table-column prop="dostatus" label="使用状态"></el-table-column>
+        <el-table-column label="操作" width="180" align="center">
+          <template #default="{ row }">
+            <el-button
+              v-if="user.role === 'TEACHER' && row.status === '待审核'"
+              @click="del(row.id)"
+              >取消预约</el-button
+            >
+            <el-button
+              v-if="user.role !== 'TEACHER' && row.status === '待审核'"
+              @click="changeStatus(row, '审核通过')"
+              >通过</el-button
+            >
+            <el-button
+              v-if="user.role !== 'TEACHER' && row.status === '待审核'"
+              @click="changeStatus(row, '审核不通过')"
+              >不通过</el-button
+            >
+            <el-button
+              v-if="user.role !== 'TEACHER' && row.dostatus === '使用中'"
+              @click="changeStatus(row, '已结束')"
+              >结束使用</el-button
+            >
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <div class="pagination">
         <el-pagination
           background
           @current-change="handleCurrentChange"
           :current-page="pageNum"
+          :page-sizes="[5, 10, 20]"
           :page-size="pageSize"
           layout="total, prev, pager, next"
           :total="total"
-        >
-        </el-pagination>
+        />
       </div>
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+import { ref, reactive, onMounted } from 'vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import request from '@/utils/request'
+const tableData = ref([]) // 表格数据
+const pageNum = ref(1) // 当前页码
+const pageSize = ref(10) // 每页显示个数
+const total = ref(0) // 数据总量
+const status = ref(null) // 查询条件
+const user = ref(JSON.parse(localStorage.getItem('xm-user') || '{}')) // 当前用户
+const form = reactive({}) // 表单对象
+
+// 分页加载数据
+const load = (page) => {
+  if (page) pageNum.value = page
+  const params = {
+    pageNum: pageNum.value,
+    pageSize: pageSize.value,
+    status: status.value,
+  }
+  // 使用请求接口获取数据
+  request.get('/reserve/selectPage', { params }).then((res) => {
+    tableData.value = res.data?.list || []
+    total.value = res.data?.total || 0
+  })
+}
+
+// 改变状态
+const changeStatus = (row: any, newStatus: string) => {
+  const data = { ...row }
+  if (newStatus === '审核通过') {
+    data.dostatus = '使用中'
+    data.status = newStatus
+  }
+  if (newStatus === '审核不通过') {
+    data.dostatus = newStatus
+    data.status = newStatus
+  }
+  if (newStatus === '已结束') {
+    data.dostatus = '已结束'
+  }
+  request.put('/reserve/update', data).then((res) => {
+    if (res.code === '200') {
+      ElMessage.success('操作成功')
+      load(1)
+    } else {
+      ElMessage.error(res.msg)
+    }
+  })
+}
+
+// 删除数据
+const del = (id) => {
+  ElMessageBox.confirm('您确定取消预约吗？', '灵魂拷问', { type: 'warning' })
+    .then(() => {
+      $request.delete(`/reserve/delete/${id}`).then((res) => {
+        if (res.code === '200') {
+          ElMessage.success('操作成功')
+          load(1)
+        } else {
+          ElMessage.error(res.msg)
+        }
+      })
+    })
+    .catch(() => {})
+}
+
+// 重置查询条件
+const reset = () => {
+  status.value = null
+  load(1)
+}
+
+// 分页操作
+const handleCurrentChange = (page) => {
+  load(page)
+}
+
+// 初始加载
+onMounted(() => {
+  load(1)
+})
+</script>
 
 <style scoped></style>

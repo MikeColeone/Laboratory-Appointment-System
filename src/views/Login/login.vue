@@ -7,7 +7,7 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const data = ref({
-  form: { username: '', password: '' },
+  form: { username: '', password: '', role: '' },
   rules: {
     username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
     password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
@@ -27,22 +27,7 @@ const login = () => {
           (res: { code: string; data: { role: unknown; username: unknown }; message: unknown }) => {
             if (res.code === '200') {
               const role = res.data.role
-
-              ElMessage.success(`欢迎，${res.data.username}！`)
-              switch (role) {
-                case 'admin':
-                  location.href = '/admin/dashboard'
-                  break
-                case 'teacher':
-                  location.href = '/teacher/home'
-                  break
-                case 'superAdmin':
-                  location.href = '/super-admin/panel'
-                  break
-                default:
-                  ElMessage.error('角色未定义，无法跳转')
-                  break
-              }
+              ElMessage.success(`欢迎，${res.data.username}!`)
             } else {
               ElMessage.error(res.message || '登录失败')
             }
@@ -107,7 +92,13 @@ const login = () => {
               style="padding: 5px; height: 50px"
             ></el-input>
           </el-form-item>
-
+          <el-form-item>
+            <el-select v-model="data.form.role" placeholder="请选择角色">
+              <el-option label="实验室管理员" value="ADMIN"></el-option>
+              <el-option label="超级管理员" value="SUPERADMIN"></el-option>
+              <el-option label="教师" value="TEACHER"></el-option>
+            </el-select>
+          </el-form-item>
           <el-form-item>
             <el-button size="large" type="primary" @click="login" style="width: 100%"
               >提交</el-button
