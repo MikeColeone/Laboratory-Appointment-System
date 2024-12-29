@@ -1,44 +1,53 @@
 <script setup lang="ts">
+/*
+  不提供注册功能 因为是内部系统
+ */
 import { ref } from 'vue'
 import request from '@/utils/request.js'
-import { User, Lock } from '@element-plus/icons-vue'
+import { User, Lock, Message } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
-
+import { useStore } from 'vuex'
+//获取路由信息
 const router = useRouter()
+//使用store
+const store = useStore()
+//表单数据以及验证规则
 const data = ref({
-  form: { username: '', password: '', role: '' },
+  form: { username: '', password: '' },
   rules: {
     username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
     password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
   },
 })
+//绑定的表单数据
 const formRef = ref()
-const login = () => {
-  console.log(formRef.value)
-
-  router.push('/')
+// 提交表单
+const login = async () => {
   formRef.value?.validate((valid: boolean) => {
     if (valid) {
-      alert('登陆成功')
+      console.log('Form submitted:==========', data.value.form)
       request
-        .post('/login', data.value.form)
-        .then(
-          (res: { code: string; data: { role: unknown; username: unknown }; message: unknown }) => {
-            if (res.code === '200') {
-              const role = res.data.role
-              ElMessage.success(`欢迎，${res.data.username}!`)
-            } else {
-              ElMessage.error(res.message || '登录失败')
-            }
-          },
-        )
+        .post('/api/login', data.value.form)
+        .then((response) => {
+          console.log('reponse', response)
+
+          router.push('/dashboard')
+
+          if (response.code == 401) {
+            console.log('++++++++++++++++++++++++++')
+            ElMessage.info('账号密码错误')
+          } else {
+            ElMessage.error('登陆失败', response.data)
+          }
+        })
         .catch((error: unknown) => {
-          ElMessage.error('登录请求失败，请稍后重试')
-          console.error('登录错误:', error)
+          console.error('登录请求失败，请检查网络', error)
+          ElMessage.error('登录请求失败，请检查网络')
         })
     } else {
-      ElMessage.warning('请完整填写表单')
+      console.log('失败')
+      ElMessage.warning('请输入完整表单')
     }
   })
 }
@@ -92,13 +101,7 @@ const login = () => {
               style="padding: 5px; height: 50px"
             ></el-input>
           </el-form-item>
-          <el-form-item>
-            <el-select v-model="data.form.role" placeholder="请选择角色">
-              <el-option label="实验室管理员" value="ADMIN"></el-option>
-              <el-option label="超级管理员" value="SUPERADMIN"></el-option>
-              <el-option label="教师" value="TEACHER"></el-option>
-            </el-select>
-          </el-form-item>
+
           <el-form-item>
             <el-button size="large" type="primary" @click="login" style="width: 100%"
               >提交</el-button

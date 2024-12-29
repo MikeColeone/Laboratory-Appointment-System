@@ -74,8 +74,11 @@ const formData = ref({
   semester: '', // 学期
   classTime: [], // 上课时间（时间范围）
   courseName: '', // 课程名
+  hours: '', //学时
+  experimentalHours: '', //实验学时
 })
 
+//表单规则
 const rules = {
   academicYear: [{ required: true, message: '请输入学年', trigger: 'blur' }],
   semester: [{ required: true, message: '请选择学期', trigger: 'change' }],
@@ -86,9 +89,8 @@ const rules = {
 const submitForm = () => {
   courseForm.value.validate((valid: boolean) => {
     if (valid) {
-      // 使用 Axios 提交表单数据
       axios
-        .post('http://your-server/submit-course', formData.value)
+        .post('http://localhost/api/submit-course', formData.value)
         .then((response) => {
           console.log('服务器响应：', response.data)
           ElMessage.success('课程上传成功！')

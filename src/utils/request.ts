@@ -1,40 +1,48 @@
 import axios from 'axios'
-import { ElMessage } from 'element-plus'
-//对axios进行二次封装
+import router from '@/router'
 
-const http = axios.create({
-  //换成接口文档前缀
-  baseURL: '/login',
-  timeout: 5000,
+const request = axios.create({
+  // baseURL: process.env.VUE_APP_BASEURL,
+  baseURL: 'http://localhost:8081', //地址
+  timeout: 300000,
 })
-//添加拦截器
-http.interceptors.request.use(
+
+// request 拦截器
+// 可以自请求发送前对请求做一些处理
+// 比如统一加token，对请求参数统一加密
+request.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('')
-    //不需要token的接口 添加到白名单
-    const whiteUrl: (string | undefined)[] = []
-    if (token && !whiteUrl.includes(config.url)) {
-      config.headers[''] = token
-    }
+    config.headers['Content-Type'] = 'application/json;charset=utf-8' // 设置请求头格式
+    const user = JSON.parse(localStorage.getItem('xm-user') || '{}') // 获取缓存的用户信息
+    config.headers['token'] = user.token // 设置请求头
+
     return config
   },
   (error) => {
-    //接口异常
+    console.error('request error: ' + error) // for debug
     return Promise.reject(error)
   },
 )
 
-//添加拦截器
-http.interceptors.response.use(
+// response 拦截器
+// 可以在接口响应后统一处理结果
+request.interceptors.response.use(
   (response) => {
-    if (response.data.code == -1) {
-      ElMessage.warning(response.data.message)
+    let res = response.data
+
+    // 兼容服务端返回的字符串数据
+    if (typeof res === 'string') {
+      res = res ? JSON.parse(res) : res
     }
-    return response
+    if (res.code === '401') {
+      router.push('/login')
+    }
+    return res
   },
   (error) => {
+    console.error('response error: ' + error) // for debug
     return Promise.reject(error)
   },
 )
 
-export default http
+export default request

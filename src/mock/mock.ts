@@ -3,6 +3,8 @@ import MockAdapter from 'axios-mock-adapter'
 
 const mock = new MockAdapter(axios)
 
-mock.onPost('/api/auth/login').reply(200, {
+mock.onPost('/api/login').reply(200, {
   token: 'zhuanghuaiyuanshamao',
+  role: 'admin',
+  code: 200,
 })

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import AdminDashboard from './adminDashboard.vue'
 import AsideView from '../../components/asideView.vue'
-import MyselfView from './myselfView.vue'
+import MyselfView from '../components/personnalInfo.vue'
 import UploadView from '../teacher/uploadView.vue'
 import AppointmentView from '../teacher/appointmentView.vue'
 </script>
