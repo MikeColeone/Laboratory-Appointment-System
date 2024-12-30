@@ -1,74 +1,3 @@
-<template>
-  <div>
-    <!-- 搜索 -->
-    <div class="search">
-      <el-input placeholder="请输入标题查询" style="width: 200px" v-model="title"></el-input>
-      <el-button type="info" plain style="margin-left: 10px" @click="load(1)">查询</el-button>
-      <el-button type="warning" plain style="margin-left: 10px" @click="reset">重置</el-button>
-    </div>
-
-    <!-- 操作 -->
-    <div class="operation">
-      <el-button plain @click="handleAdd">新增</el-button>
-      <el-button plain @click="delBatch">批量删除</el-button>
-    </div>
-
-    <div class="table">
-      <el-table :data="tableData" stripe @selection-change="handleSelectionChange">
-        <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column prop="id" label="序号" width="80" sortable></el-table-column>
-        <el-table-column prop="title" label="标题" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="content" label="内容" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="time" label="创建时间"></el-table-column>
-        <el-table-column prop="user" label="创建人"></el-table-column>
-
-        <el-table-column label="操作" width="180">
-          <template v-slot="scope">
-            <el-button plain type="primary" @click="handleEdit(scope.row)">编辑</el-button>
-            <el-button plain type="danger" @click="del(scope.row.id)">删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-
-      <div class="pagination">
-        <el-pagination
-          background
-          @current-change="handleCurrentChange"
-          :current-page="pageNum"
-          :page-sizes="[5, 10, 20, 25]"
-          :page-size="pageSize"
-          layout="total, prev, pager, next"
-          :total="total"
-        >
-        </el-pagination>
-      </div>
-    </div>
-
-    <el-dialog title="信息" :close-on-click-modal="true" destroy-on-close>
-      <el-form
-        label-width="100px"
-        style="padding-right: 50px"
-        :model="form"
-        :rules="rules"
-        ref="formRef"
-      >
-        <el-form-item prop="title" label="标题">
-          <el-input v-model="form.title" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item prop="content" label="内容">
-          <el-input type="textarea" :rows="5" v-model="form.content" autocomplete="off"></el-input>
-        </el-form-item>
-      </el-form>
-      <template v-slot:footer>
-        <div class="dialog-footer">
-          <el-button @click="fromVisible = false">取 消</el-button>
-          <el-button type="primary" @click="save">确 定</el-button>
-        </div>
-      </template>
-    </el-dialog>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
 import {
@@ -211,5 +140,75 @@ const handleCurrentChange = (pageNumParam) => {
   load(pageNumParam)
 }
 </script>
+<template>
+  <div>
+    <!-- 搜索 -->
+    <div class="search">
+      <el-input placeholder="请输入标题查询" style="width: 200px" v-model="title"></el-input>
+      <el-button type="info" plain style="margin-left: 10px" @click="load(1)">查询</el-button>
+      <el-button type="warning" plain style="margin-left: 10px" @click="reset">重置</el-button>
+    </div>
+
+    <!-- 操作 -->
+    <div class="operation">
+      <el-button plain @click="handleAdd">新增</el-button>
+      <el-button plain @click="delBatch">批量删除</el-button>
+    </div>
+
+    <div class="table">
+      <el-table :data="tableData" stripe @selection-change="handleSelectionChange">
+        <el-table-column type="selection" width="55"></el-table-column>
+        <el-table-column prop="id" label="序号" width="80" sortable></el-table-column>
+        <el-table-column prop="title" label="标题" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="content" label="内容" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="time" label="创建时间"></el-table-column>
+        <el-table-column prop="user" label="创建人"></el-table-column>
+
+        <el-table-column label="操作" width="180">
+          <template v-slot="scope">
+            <el-button plain type="primary" @click="handleEdit(scope.row)">编辑</el-button>
+            <el-button plain type="danger" @click="del(scope.row.id)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <div class="pagination">
+        <el-pagination
+          background
+          @current-change="handleCurrentChange"
+          :current-page="pageNum"
+          :page-sizes="[5, 10, 20, 25]"
+          :page-size="pageSize"
+          layout="total, prev, pager, next"
+          :total="total"
+        >
+        </el-pagination>
+      </div>
+    </div>
+
+    <el-dialog title="信息" :close-on-click-modal="true" destroy-on-close>
+      <el-form
+        label-width="100px"
+        style="padding-right: 50px"
+        :model="form"
+        :rules="rules"
+        ref="formRef"
+      >
+        <el-form-item prop="title" label="标题">
+          <el-input v-model="form.title" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item prop="content" label="内容">
+          <el-input type="textarea" :rows="5" v-model="form.content" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="fromVisible = false">取 消</el-button>
+          <el-button type="primary" @click="save">确 定</el-button>
+        </div>
+      </template>
+    </el-dialog>
+  </div>
+</template>
 
 <style scoped></style>

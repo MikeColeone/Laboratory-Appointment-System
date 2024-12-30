@@ -1,8 +1,7 @@
-<!-- 展示课表信息和实验室使用情况 -->
 <template>
   <div>
     <!-- 上传课程 唤起模态框 -->
-    <el-button>上传课程</el-button>
+    <el-button @click="showUploadModal">上传课程</el-button>
     <!-- 上传课表文件 -->
 
     <div>
@@ -17,101 +16,138 @@
             <el-option label="第二学期" value="第二学期" />
           </el-select>
         </el-form-item>
-
+        <!-- 课程名称 -->
+        <el-form-item label="课程名称" prop="courseName">
+          <el-input v-model="formData.courseName" placeholder="输入课程名称"> </el-input>
+        </el-form-item>
+        <!-- 课程类型 -->
+        <el-form-item label="课程类型" prop="courseType">
+          <el-select v-model="formData.courseType" placeholder="请选择课程类型">
+            <el-option label="理论课" value="理论课" />
+            <el-option label="实验课" value="实验课" />
+          </el-select>
+        </el-form-item>
+        <!-- 实验学时 -->
+        <el-form-item label="实验学时" prop="labHours">
+          <el-input v-model="formData.labHours" placeholder="输入实验学时"> </el-input>
+        </el-form-item>
         <!-- 上课时间 -->
         <el-form-item label="上课时间" prop="classTime">
           <el-date-picker
             v-model="formData.classTime"
             type="datetimerange"
             range-separator="至"
-            start-placeholder="开始时间"
-            end-placeholder="结束时间"
-            format="YYYY-MM-DD HH:mm"
-          />
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+          ></el-date-picker>
         </el-form-item>
 
-        <!-- 课程名 -->
-        <el-form-item label="课程名" prop="courseName">
-          <el-input v-model="formData.courseName" placeholder="请输入课程名称" />
-        </el-form-item>
-
-        <!-- 提交按钮 -->
+        <!-- 上传按钮 -->
         <el-form-item>
-          <el-button type="primary" @click="submitForm">上传课程</el-button>
-          <el-button @click="resetForm">重置</el-button>
+          <el-button type="primary" @click="uploadCourse">上传</el-button>
         </el-form-item>
       </el-form>
-      <el-button>上传课表</el-button>
-    </div>
-    <!-- 展示课表 -->
-    <div class="schedule">
-      <el-table :data="schedule" border style="width: 100%">
-        <el-table-column prop="time" label="时间段" width="150" />
-        <el-table-column prop="monday" label="星期一" />
-        <el-table-column prop="tuesday" label="星期二" />
-        <el-table-column prop="wedneday" label="星期三" />
-        <el-table-column prop="Thursday" label="星期四" />
-        <el-table-column prop="Friday" label="星期五" />
-        <el-table-column prop="Saturday" label="星期六" />
-        <el-table-column prop="sunday" label="星期日" />
-      </el-table>
     </div>
 
-    <!-- 展示实验室使用情况拿到所有实验室 -->
+    <!-- 课表展示 -->
+    <el-table :data="timetable" style="width: 100%">
+      <el-table-column prop="academicYear" label="学年"></el-table-column>
+      <el-table-column prop="semester" label="学期"></el-table-column>
+      <el-table-column prop="courseName" label="课程名称"></el-table-column>
+      <el-table-column prop="courseType" label="课程类型"></el-table-column>
+      <el-table-column prop="labHours" label="实验学时"></el-table-column>
+      <el-table-column prop="classTime" label="上课时间"></el-table-column>
+    </el-table>
+
+    <div style="margin-top: 20px">
+      <h3>实验室使用情况</h3>
+      <el-row :gutter="20">
+        <el-col :span="8">
+          <div class="usage-card">
+            <h4>计算机实验室</h4>
+            <el-progress :percentage="labUsage.lab1" status="success"></el-progress>
+          </div>
+        </el-col>
+        <el-col :span="8">
+          <div class="usage-card">
+            <h4>实验室2</h4>
+            <el-progress :percentage="labUsage.lab2" status="warning"></el-progress>
+          </div>
+        </el-col>
+        <el-col :span="8">
+          <div class="usage-card">
+            <h4>实验室3</h4>
+            <el-progress :percentage="labUsage.lab3" status="exception"></el-progress>
+          </div>
+        </el-col>
+      </el-row>
+    </div>
   </div>
 </template>
-<script lang="ts" setup>
-import { reactive } from 'vue'
-import { ref } from 'vue'
-import { ElMessage } from 'element-plus'
-import axios from 'axios'
 
-//模拟课程数据
-const schedule = reactive([])
-const courseForm = ref()
-const formData = ref({
-  academicYear: '', // 学年
-  semester: '', // 学期
-  classTime: [], // 上课时间（时间范围）
-  courseName: '', // 课程名
-  hours: '', //学时
-  experimentalHours: '', //实验学时
+<script setup lang="ts">
+import { ref, reactive } from 'vue'
+import { ElMessage } from 'element-plus'
+
+const formData = reactive({
+  academicYear: '',
+  semester: '',
+  courseName: '',
+  courseType: '',
+  labHours: '',
+  classTime: [],
 })
 
-//表单规则
 const rules = {
   academicYear: [{ required: true, message: '请输入学年', trigger: 'blur' }],
   semester: [{ required: true, message: '请选择学期', trigger: 'change' }],
-  classTime: [{ required: true, message: '请选择上课时间', trigger: 'change' }],
   courseName: [{ required: true, message: '请输入课程名称', trigger: 'blur' }],
+  courseType: [{ required: true, message: '请选择课程类型', trigger: 'change' }],
+  labHours: [{ required: true, message: '请输入实验学时', trigger: 'blur' }],
+  classTime: [{ required: true, message: '请选择上课时间', trigger: 'change' }],
 }
 
-const submitForm = () => {
-  courseForm.value.validate((valid: boolean) => {
+const timetable = ref([])
+
+const labUsage = reactive({
+  lab1: 70,
+  lab2: 50,
+  lab3: 30,
+})
+
+const courseForm = ref(null)
+
+const showUploadModal = () => {
+  // Logic to show modal (if needed)
+}
+
+const uploadCourse = () => {
+  courseForm.value?.validate((valid: boolean) => {
     if (valid) {
-      axios
-        .post('/submit-course', formData.value)
-        .then((response) => {
-          console.log('服务器响应：', response.data)
-          ElMessage.success('课程上传成功！')
-        })
-        .catch((error) => {
-          console.error('提交失败：', error)
-          ElMessage.error('提交失败，请重试！')
-        })
+      timetable.value.push({ ...formData })
+      ElMessage.success('课程上传成功')
+      // Clear form data
+      formData.academicYear = ''
+      formData.semester = ''
+      formData.courseName = ''
+      formData.courseType = ''
+      formData.labHours = ''
+      formData.classTime = []
     } else {
-      ElMessage.error('表单验证未通过！')
+      ElMessage.error('请填写完整的课程信息')
     }
   })
-}
-
-const resetForm = () => {
-  courseForm.value.resetFields()
 }
 </script>
 
 <style scoped>
-.schedule {
+.upload-demo {
+  margin-bottom: 20px;
+}
+.usage-card {
+  background: #f5f5f5;
   padding: 20px;
+  border-radius: 5px;
+  text-align: center;
 }
 </style>

@@ -79,7 +79,7 @@ const routes: RouteRecordRaw[] = [
           {
             path: '/teachers',
             name: 'Teachers',
-            component: () => import('@/views/superAdmin/teacherManage.vue'),
+            component: () => import('@/views/admin/teacherManage.vue'),
             meta: {
               id: '1',
               name: '教师管理',
@@ -91,7 +91,7 @@ const routes: RouteRecordRaw[] = [
           {
             path: '/admins',
             name: 'Admins',
-            component: () => import('@/views/superAdmin/adminManage.vue'),
+            component: () => import('@/views/admin/adminManage.vue'),
             meta: {
               id: '2',
               name: '管理员管理',
