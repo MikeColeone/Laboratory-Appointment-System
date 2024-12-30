@@ -30,7 +30,7 @@ const routes: RouteRecordRaw[] = [
           {
             path: '/announcements',
             name: 'Announcements',
-            component: () => import('@/views/components/news.vue'),
+            component: () => import('@/views/components/newsView.vue'),
             meta: {
               id: '1',
               name: '公告信息',

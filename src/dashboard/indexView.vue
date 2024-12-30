@@ -90,7 +90,7 @@ const submitForm = () => {
   courseForm.value.validate((valid: boolean) => {
     if (valid) {
       axios
-        .post('http://localhost/api/submit-course', formData.value)
+        .post('/submit-course', formData.value)
         .then((response) => {
           console.log('服务器响应：', response.data)
           ElMessage.success('课程上传成功！')

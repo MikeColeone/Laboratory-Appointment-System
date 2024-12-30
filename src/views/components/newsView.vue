@@ -83,7 +83,7 @@ import {
   ElFormItem,
   ElDialog,
 } from 'element-plus'
-import { request } from '@/utils/request'
+import request from '@/utils/request'
 
 // 响应式数据声明
 const tableData = ref([]) // 所有的数据
@@ -93,7 +93,6 @@ const total = ref(0)
 const title = ref(null)
 const fromVisible = ref(false)
 const form = reactive({})
-const user = JSON.parse(localStorage.getItem('xm-user') || '{}')
 const rules = reactive({
   title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
   content: [{ required: true, message: '请输入内容', trigger: 'blur' }],
