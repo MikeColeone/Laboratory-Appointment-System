@@ -9,7 +9,9 @@
         justify-content: center;
       "
     >
-      <div style="font-size: 40px">无权访问 <router-link to="/">返回首页</router-link></div>
+      <div style="font-size: 40px">
+        无权访问 <router-link to="/dashboard">返回首页</router-link>
+      </div>
     </div>
   </div>
 </template>

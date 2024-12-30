@@ -16,6 +16,14 @@ export default defineConfig({
   //     '/api': 'http://localhost:3000', // 将/api请求代理到本地3000端口
   //   },
   // },
+  server: {
+    proxy: {
+      '/api/': {
+        target: 'http://localhost:8080', // 你的后端服务器地址
+        changeOrigin: true, // 必须设置为true，才能代理到不同的域名
+      },
+    },
+  },
   plugins: [
     vue(),
     vueDevTools(),

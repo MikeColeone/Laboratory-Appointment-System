@@ -127,17 +127,20 @@ const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes,
 })
-// router.beforeEach((to, from, next) => {
-//   const role = localStorage.getItem('userRole') // 从本地存储获取角色信息
-
-//   if (to.path.startsWith('/admin') && role !== 'admin') {
-//     ElMessage.error('无权访问该页面')
-//     next('/') // 重定向到首页或登录页
-//   } else if (to.path.startsWith('/teacher') && role !== 'teacher') {
-//     ElMessage.error('无权访问该页面')
-//     next('/')
-//   } else {
-//     next() // 允许访问
+// router.beforeEach((to, form, next) => {
+//   const user = JSON.parse(localStorage.getItem('xm-user') || '{}')
+//   if (to.path == '/') {
+//     if (user.role) {
+//       if (user.role == 'USER') {
+//         next('')
+//       } else if (user.role == 'ADMIN') {
+//         next('')
+//       } else if (user.role == 'SUPERADMIN') {
+//         next('')
+//       } else {
+//         next('/login')
+//       }
+//     }
 //   }
 // })
 

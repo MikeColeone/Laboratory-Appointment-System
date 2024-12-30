@@ -3,7 +3,7 @@ import router from '@/router'
 
 const request = axios.create({
   // baseURL: process.env.VUE_APP_BASEURL,
-  baseURL: 'http://localhost:8081', //地址
+  baseURL: '/api/', //地址
   timeout: 300000,
 })
 
@@ -15,7 +15,7 @@ request.interceptors.request.use(
     config.headers['Content-Type'] = 'application/json;charset=utf-8' // 设置请求头格式
     const user = JSON.parse(localStorage.getItem('xm-user') || '{}') // 获取缓存的用户信息
     config.headers['token'] = user.token // 设置请求头
-
+    console.log(config)
     return config
   },
   (error) => {
@@ -29,18 +29,14 @@ request.interceptors.request.use(
 request.interceptors.response.use(
   (response) => {
     let res = response.data
-
-    // 兼容服务端返回的字符串数据
+    console.log('response', response)
     if (typeof res === 'string') {
       res = res ? JSON.parse(res) : res
-    }
-    if (res.code === '401') {
-      router.push('/login')
     }
     return res
   },
   (error) => {
-    console.error('response error: ' + error) // for debug
+    console.error('response error: ' + error)
     return Promise.reject(error)
   },
 )

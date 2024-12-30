@@ -27,8 +27,9 @@ const login = async () => {
   formRef.value?.validate((valid: boolean) => {
     if (valid) {
       console.log('Form submitted:==========', data.value.form)
+      console.log('request', request)
       request
-        .post('/api/login', data.value.form)
+        .post('login', data.value.form)
         .then((response) => {
           console.log('reponse', response)
 

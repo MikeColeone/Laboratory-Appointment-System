@@ -16,7 +16,7 @@ export interface LabInformation {
   kind: string
 }
 export interface LabType {
-  id: string
+  id: number
   name: string
 }
 

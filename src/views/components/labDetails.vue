@@ -13,7 +13,16 @@ const pageSize = ref(10)
 const total = ref(0)
 
 // 实验室类型数据
-const typeData = ref<LabType[]>([{ id: 1, name: '计算机实验室' }])
+const typeData = ref<LabType[]>([
+  {
+    id: 1,
+    name: '计算机实验室',
+  },
+  {
+    id: 2,
+    name: '林科实验室',
+  },
+])
 
 // 模拟实验室数据
 const allData: Lab[] = [

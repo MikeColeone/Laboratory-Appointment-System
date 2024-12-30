@@ -21,7 +21,6 @@ const tableData = ref([
     email: 'zhangsan@example.com',
     role: '管理员',
   },
-  // 添加更多示例数据
 ])
 
 const save = () => {}

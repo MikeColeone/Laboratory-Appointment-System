@@ -6,5 +6,6 @@
 // biome-ignore lint: disable
 export {}
 declare global {
+  const ElConfirm: typeof import('element-plus/es')['ElConfirm']
   const ElMessage: typeof import('element-plus/es')['ElMessage']
 }
