@@ -10,7 +10,7 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/dashboard/indexView.vue'),
         meta: {
           id: '1',
-          name: '控制台',
+          name: '首页',
           icon: 'Platform',
           path: '/dashboard',
           describe: '用于展示当前系统中的统计数据、统计报表及重要实时数据',
@@ -57,7 +57,7 @@ const routes: RouteRecordRaw[] = [
             component: () => import('@/views/components/labDetails.vue'),
             meta: {
               id: '3',
-              name: '实验室详情',
+              name: '临时预约',
               icon: 'Reading',
               path: '/details',
               descibe: '用于展示实验室详细信息',
@@ -77,24 +77,12 @@ const routes: RouteRecordRaw[] = [
         },
         children: [
           {
-            path: '/teachers',
-            name: 'Teachers',
-            component: () => import('@/views/admin/teacherManage.vue'),
-            meta: {
-              id: '1',
-              name: '教师管理',
-              icon: 'EditPen',
-              path: '/teachers',
-              descibe: '用于表示教师管理',
-            },
-          },
-          {
             path: '/admins',
             name: 'Admins',
             component: () => import('@/views/admin/adminManage.vue'),
             meta: {
-              id: '2',
-              name: '管理员管理',
+              id: '1',
+              name: '用户管理',
               icon: 'UserFilled',
               path: '/admins',
               descibe: '用于表示管理员管理',
@@ -105,7 +93,7 @@ const routes: RouteRecordRaw[] = [
             name: 'Profile',
             component: () => import('@/views/components/personnalInfo.vue'),
             meta: {
-              id: '3',
+              id: '2',
               name: '个人信息',
               icon: 'User',
               path: '/profile',
@@ -120,7 +108,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/login',
     name: 'Login',
-    component: () => import('@/views/Login/loginView.vue'),
+    component: () => import('@/views/components/loginView.vue'),
   },
 ]
 const router = createRouter({

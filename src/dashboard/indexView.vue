@@ -70,14 +70,8 @@
         </el-col>
         <el-col :span="8">
           <div class="usage-card">
-            <h4>实验室2</h4>
+            <h4>林学院实验室</h4>
             <el-progress :percentage="labUsage.lab2" status="warning"></el-progress>
-          </div>
-        </el-col>
-        <el-col :span="8">
-          <div class="usage-card">
-            <h4>实验室3</h4>
-            <el-progress :percentage="labUsage.lab3" status="exception"></el-progress>
           </div>
         </el-col>
       </el-row>
@@ -86,8 +80,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
+import request from '@/utils/request'
 
 const formData = reactive({
   academicYear: '',
@@ -109,10 +104,10 @@ const rules = {
 
 const timetable = ref([])
 
+//计算使用情况
 const labUsage = reactive({
-  lab1: 70,
+  lab1: 100,
   lab2: 50,
-  lab3: 30,
 })
 
 const courseForm = ref(null)
@@ -121,6 +116,16 @@ const showUploadModal = () => {
   // Logic to show modal (if needed)
 }
 
+const fetchLabsData = () => {
+  request.get('teacher/labs').then((response) => {
+    console.log('Labs data:', response.data)
+  })
+}
+
+//拿到所有实验室
+onMounted(() => {
+  fetchLabsData()
+})
 const uploadCourse = () => {
   courseForm.value?.validate((valid: boolean) => {
     if (valid) {

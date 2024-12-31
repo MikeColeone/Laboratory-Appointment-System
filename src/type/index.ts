@@ -1,5 +1,6 @@
 //实验室
 export interface Lab {
+  typeName: any
   id: number
   number: number
   name: string

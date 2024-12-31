@@ -11,10 +11,6 @@ const isCollapse = computed(() => store.state.menu.isCollapse)
 const router = useRouter()
 const menuData = reactive(router.options.routes[0]?.children || [])
 
-console.log('=====================================================')
-console.log(router)
-console.log('=====================================================')
-
 console.log(menuData)
 </script>
 <template>

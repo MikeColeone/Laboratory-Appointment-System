@@ -5,8 +5,7 @@ import { useStore } from 'vuex'
 import type { RouteLocationAsRelativeGeneric, RouteLocationAsPathGeneric } from 'vue-router'
 
 const props = defineProps(['menuData', 'index'])
-// console.log(props.menuData.meta)
-console.log(JSON.stringify(props.menuData)) // 调试 props.menuData 内容
+
 const handleClick = (item: {
   meta: { path: string | RouteLocationAsRelativeGeneric | RouteLocationAsPathGeneric }
 }) => {
@@ -14,8 +13,6 @@ const handleClick = (item: {
   store.commit('addMenu', item.meta)
 }
 const store = useStore()
-const isCollapse = computed(() => store.state.menu.isCollapse)
-console.log(isCollapse)
 </script>
 
 <template>
@@ -30,7 +27,7 @@ console.log(isCollapse)
           <el-icon size="20">
             <component :is="item.meta.icon"></component>
           </el-icon>
-          <span>{{ !isCollapse == true ? item.meta.name : '' }}</span>
+          <span>{{ item.meta.name }}</span>
         </el-menu-item>
 
         <el-sub-menu v-else :index="`${props.index}-${item.meta.id}`">
@@ -38,7 +35,7 @@ console.log(isCollapse)
             <el-icon size="20">
               <component :is="item.meta.icon"></component>
             </el-icon>
-            <span>{{ !isCollapse == true ? item.meta.name : '' }}</span>
+            <span>{{ item.meta.name }}</span>
           </template>
           <tree-menu :index="`${props.index}-${item.meta.id}`" :menuData="item.children || []" />
         </el-sub-menu>

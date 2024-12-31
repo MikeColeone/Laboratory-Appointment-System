@@ -2,17 +2,6 @@
   <div>
     <el-card style="width: 50%">
       <el-form :model="user" label-width="100px" style="padding-right: 50px">
-        <div style="margin: 15px; text-align: center">
-          <el-upload
-            class="avatar-uploader"
-            :action="`${baseUrl}/files/upload`"
-            :show-file-list="false"
-            :on-success="handleAvatarSuccess"
-          >
-            <img v-if="user.avatar" :src="user.avatar" class="avatar" />
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-          </el-upload>
-        </div>
         <el-form-item label="用户名" prop="username">
           <el-input v-model="user.username" placeholder="用户名" disabled></el-input>
         </el-form-item>
@@ -38,12 +27,11 @@ import { reactive, ref } from 'vue'
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
 
-const baseUrl = 'http://your-api-url' // 替换为实际 API 地址
 const user = reactive(JSON.parse(localStorage.getItem('xm-user') || '{}'))
 
 const update = async () => {
   try {
-    const response = await axios.put(`${baseUrl}/student/update`, user)
+    const response = await axios.put(`/student/update`, user)
     if (response.data.code === '200') {
       ElMessage.success('保存成功')
 
@@ -59,10 +47,6 @@ const update = async () => {
     ElMessage.error('请求失败，请稍后重试！')
     console.error(error)
   }
-}
-
-const handleAvatarSuccess = (response: any) => {
-  user.avatar = response.data
 }
 </script>
 

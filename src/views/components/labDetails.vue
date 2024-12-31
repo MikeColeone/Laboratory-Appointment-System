@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import type { Lab, LabType } from '@/type'
-
+import request from '@/utils/request'
 // 表单数据
 const name = ref<string | null>(null)
 const typeId = ref<number | null>(null)
@@ -24,32 +24,24 @@ const typeData = ref<LabType[]>([
   },
 ])
 
-// 模拟实验室数据
-const allData: Lab[] = [
-  {
-    id: 1,
-    name: '实验室A',
-    descr: '计算机实验室',
-    typeName: '计算机实验室',
-    status: '空闲中',
-    start: '08:00',
-    end: '18:00',
-  },
-]
-
 // 加载实验室数据函数
 const load = async (page: number) => {
   pageNum.value = page
-  // 模拟过滤数据
-  const filteredData = allData.filter((item) => {
-    return (
-      !typeId.value ||
-      item.typeName.includes(typeData.value.find((type) => type.id === typeId.value)?.name || '')
-    )
-  })
-
-  total.value = filteredData.length // 总数
-  tableData.value = filteredData.slice((page - 1) * pageSize.value, page * pageSize.value) // 分页显示
+  try {
+    const response = await request.get('labs', {
+      params: {
+        page: pageNum.value,
+        pageSize: pageSize.value,
+        name: name.value,
+        typeId: typeId.value,
+      },
+    })
+    const { data, total: totalLabs } = response.data
+    tableData.value = data
+    total.value = totalLabs
+  } catch (error) {
+    console.error('加载实验室数据失败:', error)
+  }
 }
 
 // 重置搜索条件
@@ -62,6 +54,12 @@ const reset = () => {
 // 分页变化时加载
 const handleCurrentChange = (page: number) => {
   load(page)
+}
+
+// 预约函数
+const reserve = (lab: Lab) => {
+  console.log('预约实验室:', lab)
+  // 在这里添加预约逻辑
 }
 
 onMounted(() => {
@@ -81,33 +79,30 @@ onMounted(() => {
           :key="item.id"
         ></el-option>
       </el-select>
+      <el-input
+        v-model="name"
+        placeholder="输入实验室名称"
+        style="width: 200px; margin-left: 10px"
+      ></el-input>
       <el-button type="info" plain @click="load(1)">查询</el-button>
       <el-button type="warning" plain @click="reset">重置</el-button>
     </div>
     <div class="table">
-      <el-row :gutter="20">
-        <el-col :span="8" v-for="item in tableData" :key="item.id">
-          <div class="card">
-            <div>
-              <strong>实验室编号：</strong>
-              <span>{{ item.name }}</span>
-            </div>
-            <div><strong>名称：</strong>{{ item.descr }}</div>
-            <div><strong>类型：</strong>{{ item.typeName }}</div>
-            <div style="margin-top: 5px">
-              <strong>状态：</strong>
-              <span>
-                {{ item.status }}
-              </span>
-            </div>
-            <div><strong>开放时间：</strong>{{ item.start }} - {{ item.end }}</div>
-            <div>
-              <el-button>预约</el-button>
-            </div>
-          </div>
-        </el-col>
-      </el-row>
-      <div>
+      <el-table :data="tableData" style="width: 100%">
+        <el-table-column prop="name" label="实验室编号"></el-table-column>
+        <el-table-column prop="descr" label="名称"></el-table-column>
+        <el-table-column prop="typeName" label="类型"></el-table-column>
+        <el-table-column prop="status" label="状态"></el-table-column>
+        <el-table-column prop="start" label="开放时间">
+          <template #default="scope"> {{ scope.row.start }} - {{ scope.row.end }} </template>
+        </el-table-column>
+        <el-table-column label="操作">
+          <template #default="scope">
+            <el-button @click="reserve(scope.row)">预约</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <div style="margin-top: 20px">
         <el-pagination
           background
           @current-change="handleCurrentChange"
@@ -122,4 +117,8 @@ onMounted(() => {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.search {
+  margin-bottom: 20px;
+}
+</style>

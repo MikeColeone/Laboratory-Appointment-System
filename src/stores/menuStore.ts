@@ -18,12 +18,6 @@ const mutations = {
     const index = state.selectMenu.findIndex((val) => val.name === payload.name)
     //传入参数 删除的数量
     state.selectMenu.splice(index, 1)
-    // console.log(index)
-    console.log('===================================fffffffffffff===')
-    console.log('Before closeMenu:', state.selectMenu)
-
-    console.log('Payload Name:', payload.name)
-    console.log('Select Menu:', state.selectMenu)
   },
 }
 
