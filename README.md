@@ -1,5 +1,11 @@
 # Laboratory-Appointment-System
 
+# Introduce
+
+- 前后端分离项目
+- vue3 + vuex
+- Elmentplus
+
 ## Recommended IDE Setup
 
 [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
