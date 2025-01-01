@@ -38,11 +38,6 @@ request.interceptors.response.use(
     if (typeof res === 'string') {
       res = res ? JSON.parse(res) : res
     }
-    if (res.code === '401') {
-      localStorage.removeItem('xm-user') // 清除用户信息
-      localStorage.removeItem('token') // 清除 token
-      router.push('/login')
-    }
     return res
   },
   (error) => {
