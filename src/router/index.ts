@@ -1,4 +1,5 @@
 import { createRouter, createWebHashHistory, type RouteRecordRaw } from 'vue-router'
+import { ElMessage } from 'element-plus'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -110,26 +111,48 @@ const routes: RouteRecordRaw[] = [
     name: 'Login',
     component: () => import('@/views/components/loginView.vue'),
   },
+  {
+    path: '/403',
+    name: '403',
+    component: () => import('@/views/components/403.vue'),
+  },
 ]
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes,
 })
-// router.beforeEach((to, form, next) => {
-//   const user = JSON.parse(localStorage.getItem('xm-user') || '{}')
-//   if (to.path == '/') {
-//     if (user.role) {
-//       if (user.role == 'USER') {
-//         next('')
-//       } else if (user.role == 'ADMIN') {
-//         next('')
-//       } else if (user.role == 'SUPERADMIN') {
-//         next('')
-//       } else {
-//         next('/login')
-//       }
-//     }
-//   }
-// })
+
+router.beforeEach((to, from, next) => {
+  const user = JSON.parse(localStorage.getItem('xm-user') || '{}')
+
+  // && to.path !== '/profile' 添加该逻辑 防止用户在跳转的时侯一直发请修改密码 阻塞进程
+  if (user.password === user.account && user.role === 'teacher' && to.path !== '/profile') {
+    next('/profile')
+    ElMessage.error('请修改密码')
+    return
+  }
+
+  if (to.path === '/admin/manage' && user.role !== 'admin') {
+    next('/403')
+    ElMessage.error('无权限访问')
+    return
+  }
+
+  if (!user.role && to.path !== '/login') {
+    next('/login')
+    return
+  }
+
+  if (to.path === '/') {
+    if (user.role === 'user') {
+      next('/dashboard')
+    } else {
+      next('/login')
+    }
+    return
+  }
+
+  next() // 继续导航
+})
 
 export default router

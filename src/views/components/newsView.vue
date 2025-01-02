@@ -91,27 +91,12 @@ const handleSelectionChange = (rows) => {
   ids.value = rows.map((v) => v.id)
 }
 
-// 批量删除方法
-const delBatch = () => {
-  if (!ids.value.length) {
-    ElMessage.warning('请选择数据')
-    return
-  }
-  ElMessageBox.confirm('您确定批量删除这些数据吗？', '确认删除', { type: 'warning' })
-    .then(() => {
-      request.delete('/notice/delete/batch', { data: ids.value }).then((res) => {
-        if (res.code === '200') {
-          // 表示操作成功
-          ElMessage.success('操作成功')
-          load(1)
-        } else {
-          ElMessage.error(res.msg) // 弹出错误的信息
-        }
-      })
-    })
-    .catch(() => {})
+const fetchData = () => {
+  request.get('/notice/selectPage', { params: { pageNum: 1, pageSize: 10 } }).then((res) => {
+    tableData.value = res.data?.list
+    total.value = res.data?.total
+  })
 }
-
 // 分页查询方法
 const load = (pageNumParam) => {
   if (pageNumParam) pageNum.value = pageNumParam
@@ -134,7 +119,7 @@ const reset = () => {
   title.value = null
   load(1)
 }
-
+const formRef = ref(null)
 // 处理页码变化的方法
 const handleCurrentChange = (pageNumParam) => {
   load(pageNumParam)
@@ -142,22 +127,15 @@ const handleCurrentChange = (pageNumParam) => {
 </script>
 <template>
   <div>
-    <!-- 搜索 -->
-    <div class="search">
+    <!-- 操作 -->
+    <div class="operate">
       <el-input placeholder="请输入标题查询" style="width: 200px" v-model="title"></el-input>
       <el-button type="info" plain style="margin-left: 10px" @click="load(1)">查询</el-button>
       <el-button type="warning" plain style="margin-left: 10px" @click="reset">重置</el-button>
-    </div>
-
-    <!-- 操作 -->
-    <div class="operation">
       <el-button plain @click="handleAdd">新增</el-button>
-      <el-button plain @click="delBatch">批量删除</el-button>
     </div>
-
     <div class="table">
       <el-table :data="tableData" stripe @selection-change="handleSelectionChange">
-        <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column prop="id" label="序号" width="80" sortable></el-table-column>
         <el-table-column prop="title" label="标题" show-overflow-tooltip></el-table-column>
         <el-table-column prop="content" label="内容" show-overflow-tooltip></el-table-column>

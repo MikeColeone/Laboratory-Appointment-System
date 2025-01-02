@@ -11,7 +11,7 @@ const request = axios.create({
 request.interceptors.request.use(
   (config) => {
     config.headers['Content-Type'] = 'application/json' // 设置请求头格式
-    const token = window.localStorage.getItem('token') // 获取 token
+    const token = localStorage.getItem('token') // 获取 token
     console.log('Request token:', token) // 打印 token
     if (token) {
       config.headers['token'] = token // 设置请求头

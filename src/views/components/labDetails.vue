@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, reactive } from 'vue'
 import type { Lab, LabType } from '@/type'
 import request from '@/utils/request'
 // 表单数据
@@ -65,10 +65,33 @@ const reserve = (lab: Lab) => {
 onMounted(() => {
   load(1)
 })
+
+//计算使用情况
+const labUsage = reactive({
+  lab1: 100,
+  lab2: 50,
+})
 </script>
 
 <template>
   <div>
+    <div style="margin-top: 20px">
+      <h3>实验室使用情况</h3>
+      <el-row :gutter="20">
+        <el-col :span="8">
+          <div class="usage-card">
+            <h4>计算机实验室</h4>
+            <el-progress :percentage="labUsage.lab1" status="success"></el-progress>
+          </div>
+        </el-col>
+        <el-col :span="8">
+          <div class="usage-card">
+            <h4>林学院实验室</h4>
+            <el-progress :percentage="labUsage.lab2" status="warning"></el-progress>
+          </div>
+        </el-col>
+      </el-row>
+    </div>
     <h1>临时预约</h1>
     <div class="search">
       <el-select v-model="typeId" placeholder="请选择实验室分类" style="width: 200px">

@@ -25,9 +25,7 @@ const menuData = reactive(router.options.routes[0]?.children || [])
       @open="handleOpen"
       @close="handleClose"
     >
-      <p class="logo-title" style="padding: 10px">
-        {{ isCollapse ? 'NEFU' : 'nefu实验室管理系统' }}
-      </p>
+      <p class="logo-title" style="padding: 10px">nefu实验室管理系统</p>
       <TreeMenu :index="1" :menuData="menuData" />
     </el-menu>
   </div>
