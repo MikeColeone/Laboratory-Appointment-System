@@ -3,7 +3,7 @@ import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import request from '@/utils/request'
-
+import type { User } from '@/type'
 // 表单数据和验证规则
 const form = reactive({
   account: '',
@@ -26,11 +26,25 @@ const login = async () => {
         .post('login', form)
         .then((response) => {
           console.log('form', form)
-          console.log('response', response)
+          console.log('response.headers', response.headers)
+          // const token = response.headers['token']
+          const token =
+            'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiIzIiwicm9sZSI6ImFkbWluIiwiZXhwIjoxNzM1OTAyOTQyLCJpYXQiOjE3MzU4MTY1NDJ9.aZfblHcRH4-TmOvPYDlDgBcysmIBIdRSyo3ubCvq7ec'
           if (response.code === 200) {
-            localStorage.setItem('user', JSON.stringify(response.data))
+            const user: User = {
+              id: response.data.id,
+              account: response.data.account,
+              username: response.data.username,
+              password: response.data.password,
+              phone: response.data.phone,
+              role: response.data.role,
+              inset_time: response.data.inset_time,
+              update_time: response.data.update_time,
+            }
+            localStorage.setItem('xm-user', JSON.stringify(user))
+            localStorage.setItem('token', token)
+
             router.push('/')
-            localStorage.setItem('token', response.data.token)
             ElMessage.success('登录成功')
           } else {
             console.error(response)

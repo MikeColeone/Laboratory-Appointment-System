@@ -81,15 +81,13 @@ export interface PaginatedAppointments {
   pageSize: number // 每页记录数
 }
 
-export enum roles {
-  ADMIN = '管理员',
-  TEACHER = '教师',
-  SUPERADMIN = '超级管理员',
-}
-export interface users {
-  id: number
-  username: string
-  phone: string
+export interface User {
+  id: string
   account: string
+  username: string
   password: string
+  phone: string
+  role: string
+  inset_time: string | null
+  update_time: string
 }
